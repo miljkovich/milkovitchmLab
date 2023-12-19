@@ -1,11 +1,9 @@
 package tech.reliab.course.milkovitchm.bank.service.impl;
 
+import tech.reliab.course.milkovitchm.bank.entity.Bank;
 import tech.reliab.course.milkovitchm.bank.entity.PaymentAccount;
 import tech.reliab.course.milkovitchm.bank.entity.User;
 import tech.reliab.course.milkovitchm.bank.service.PaymentAccountService;
-
-import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  *  Singleton
@@ -23,39 +21,24 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
     }
 
     private Long id = 0L;
-    private LinkedHashMap<Long, PaymentAccount> paymentAccounts = new LinkedHashMap<Long, PaymentAccount>();
 
 
     @Override
-    public PaymentAccount create(User user, String bankName){
+    public PaymentAccount create(User user, Bank bank){
         var paymentAccount = new PaymentAccount(
                 ++id,
                 user,
-                bankName,
+                bank,
                 0
         );
+        if(!user.getBanks().contains(bank)){
+            user.addBank(bank);
+        }
+        user.getPaymentAccounts().add(paymentAccount);
         return paymentAccount;
     }
 
-    @Override
-    public List<PaymentAccount> findAll(){
-        return paymentAccounts.values().stream().toList();
-    }
 
-    @Override
-    public void addPaymentAccount(PaymentAccount paymentAccount) {
-        paymentAccounts.put(paymentAccount.getId(), paymentAccount);
-    }
-
-    @Override
-    public PaymentAccount getPaymentAccountById(Long id) {
-        return paymentAccounts.get(id);
-    }
-
-    @Override
-    public void delPaymentAccountById(Long id) {
-        paymentAccounts.remove(id);
-    }
 
 
 }

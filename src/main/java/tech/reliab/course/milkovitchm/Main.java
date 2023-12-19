@@ -1,10 +1,13 @@
 package tech.reliab.course.milkovitchm;
 
-import tech.reliab.course.milkovitchm.bank.entity.*;
+import tech.reliab.course.milkovitchm.bank.entity.Bank;
+import tech.reliab.course.milkovitchm.bank.entity.User;
 import tech.reliab.course.milkovitchm.bank.service.*;
 import tech.reliab.course.milkovitchm.bank.service.impl.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,6 +20,8 @@ public class Main {
         PaymentAccountService paymentAccountService = PaymentAccountServiceImpl.getInstance();
         CreditAccountService creditAccountService = CreditAccountServiceImpl.getInstance();
 
+        List<Bank> bankList = new ArrayList<>();
+
         //Создание сущьностей
         for(int numBunk=0; numBunk<5; numBunk++){
             var bank = bankService.create("Bank"+(numBunk+1));
@@ -27,7 +32,6 @@ public class Main {
                         "Address",
                         1000.
                 );
-                officeService.addOffice(office);
                 for(int numEmpl=0; numEmpl<5; numEmpl++){
                     var employee = employeeService.create(
                             "milyan",
@@ -38,34 +42,30 @@ public class Main {
                             office,
                             10000.
                     );
-                    employeeService.addEmployee(employee);
                 }
             }
             for(int numAtm=0; numAtm<3; numAtm++){
                 var atm = atmService.create(
                         "atm"+(numAtm+1),
                         bank,
-                        officeService.getOfficeById(1L),
-                        employeeService.getEmployeeById(1L),
+                        bank.getOffices().stream().findFirst().get(),
+                        bank.getEmployees().stream().findFirst().get(),
                         100.
                         );
-                atmService.addBankAtm(atm);
             }
             for(int numUser=0; numUser<5; numUser++){
                 var user = userService.create(
                         "user",
                         "user",
                         LocalDate.now(),
-                        "job",
-                        bank
+                        "job"
                         );
-                userService.addUser(user);
+                bankService.addUser(bank, user);
                 for(int numPay=0; numPay<2; numPay++){
                     var paymentAccount = paymentAccountService.create(
                             user,
-                            bank.getName()
+                            bank
                     );
-                    paymentAccountService.addPaymentAccount(paymentAccount);
                     var credit = creditAccountService.create(
                             user,
                             bank,
@@ -74,19 +74,19 @@ public class Main {
                             12,
                             100000.,
                             1000.,
-                            employeeService.findAll().stream().filter(
-                                    empl -> empl.getBank().getId().compareTo(bank.getId())==0)
-                                    .toList().get(0),
+                            bank.getEmployees().stream().findFirst().get(),
                             paymentAccount
                     );
-                    creditAccountService.addCreditAccount(credit);
                 }
             }
-            bankService.addBank(bank);
+            bankList.add(bank);
         }
-        //Вывод информации по всем банкам
-        for(var bank : bankService.findAll()){
-            bankService.outputBankInfo(bank.getId());
-        }
+
+        User user = userService.create("Test", "User", LocalDate.now(), "job");
+
+        bankService.getCredit(bankList, user);
+
+        userService.outputUserInfo(user);
+
     }
 }

@@ -6,8 +6,6 @@ import tech.reliab.course.milkovitchm.bank.entity.Employee;
 import tech.reliab.course.milkovitchm.bank.service.EmployeeService;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  *  Singleton
@@ -25,7 +23,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private Long id = 0L;
-    private LinkedHashMap<Long, Employee> employees = new LinkedHashMap<Long, Employee>();
 
     @Override
     public Employee create(String firstName, String lastName, LocalDate birthDate,
@@ -42,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 true,
                 salary
         );
-        bank.setNumberOfEmployees(bank.getNumberOfEmployees()+1);
+        bank.getEmployees().add(employee);
         return employee;
     }
 
@@ -62,28 +59,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 true,
                 salary
         );
-        bank.setNumberOfEmployees(bank.getNumberOfEmployees()+1);
+        bank.getEmployees().add(employee);
         return employee;
-    }
-
-    @Override
-    public List<Employee> findAll(){
-        return employees.values().stream().toList();
-    }
-
-    @Override
-    public void addEmployee(Employee employee){
-        employees.put(employee.getId(), employee);
-    }
-
-    @Override
-    public Employee getEmployeeById(Long id){
-        return employees.get(id);
-    }
-
-    @Override
-    public void delEmployeeById(Long id){
-        employees.remove(id);
     }
 
 }

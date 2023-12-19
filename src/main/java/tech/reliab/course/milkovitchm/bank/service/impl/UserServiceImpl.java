@@ -2,11 +2,10 @@ package tech.reliab.course.milkovitchm.bank.service.impl;
 
 import tech.reliab.course.milkovitchm.bank.entity.Bank;
 import tech.reliab.course.milkovitchm.bank.entity.User;
+import tech.reliab.course.milkovitchm.bank.exceptions.DeletingNotExistentObjectException;
 import tech.reliab.course.milkovitchm.bank.service.UserService;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -26,11 +25,10 @@ public class UserServiceImpl implements UserService {
     }
     private Long id = 0L;
     private Random random = new Random();
-    private LinkedHashMap<Long, User> users = new LinkedHashMap<Long, User>();
 
     @Override
-    public User create(String firstName, String lastName, LocalDate birthDate, String job, Bank bank){
-        double salary = random.nextInt(10000);
+    public User create(String firstName, String lastName, LocalDate birthDate, String job){
+        double salary = random.nextInt(100000);
         var user = new User(
                 ++id,
                 firstName,
@@ -38,15 +36,13 @@ public class UserServiceImpl implements UserService {
                 birthDate,
                 job,
                 salary,
-                bank,
                 salary / 10
         );
-        bank.setNumberOfClients(bank.getNumberOfClients()+1);
         return user;
     }
 
     @Override
-    public User create(String firstName, String lastName, String patronymic, LocalDate birthDate, String job, Bank bank){
+    public User create(String firstName, String lastName, String patronymic, LocalDate birthDate, String job){
         double salary = random.nextInt(10000);
         var user = new User(
                 ++id,
@@ -56,49 +52,36 @@ public class UserServiceImpl implements UserService {
                 birthDate,
                 job,
                 salary,
-                bank,
                 salary / 10
         );
-        bank.setNumberOfClients(bank.getNumberOfClients()+1);
         return user;
     }
 
     @Override
-    public List<User> findAll() {
-        return users.values().stream().toList();
-    }
-
-    @Override
-    public void addUser(User user) {
-        users.put(user.getId(), user);
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        return users.get(id);
-    }
-
-    @Override
-    public void delUserById(Long id) {
-        users.remove(id);
-    }
-
-    @Override
-    public void outputUserInfo(Long id) {
+    public void outputUserInfo(User user) {
         System.out.println("User:");
-        System.out.println(users.get(id));
-        var pays = PaymentAccountServiceImpl.getInstance().findAll().stream()
-                .filter(pay -> pay.getUser().getId().compareTo(id)==0).toList();
-        System.out.println("\tPaymentAccounts:");
-        for(var pay : pays){
-            System.out.println("\t\t"+pay);
+        System.out.println("\t"+user);
+        System.out.println("\tPayment Accounts:");
+        for(var payment: user.getPaymentAccounts()){
+            System.out.println("\t\t"+payment);
         }
-        var credits = CreditAccountServiceImpl.getInstance().findAll().stream()
-                .filter(pay -> pay.getUser().getId().compareTo(id)==0).toList();
-        System.out.println("\tCreditAccounts:");
-        for(var credit : credits){
+        System.out.println("\tCredit Accounts:");
+        for(var credit: user.getCreditAccounts()){
             System.out.println("\t\t"+credit);
         }
+    }
+
+    @Override
+    public void addBank(User user, Bank bank) {
+        user.getBanks().add(bank);
+    }
+
+    @Override
+    public void deleteBank(User user, Bank bank) {
+        if(!user.getBanks().contains(bank)){
+            throw new DeletingNotExistentObjectException();
+        }
+        user.getBanks().remove(bank);
     }
 
 

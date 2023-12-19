@@ -5,8 +5,6 @@ import tech.reliab.course.milkovitchm.bank.entity.BankAtm;
 import tech.reliab.course.milkovitchm.bank.entity.BankOffice;
 import tech.reliab.course.milkovitchm.bank.entity.Employee;
 
-import java.util.List;
-
 public interface BankAtmService {
     /**
      *
@@ -20,27 +18,9 @@ public interface BankAtmService {
     BankAtm create(String name, Bank bank, BankOffice bankOffice, Employee employee, double maintenance);
 
     /**
-     *
-     * @return список всех банкоматов
-     */
-    List<BankAtm> findAll();
-
-    /**
-     * добавляет банкомат в коллекцию
+     * Снятие денег в банкомате
      * @param atm - банкомат
+     * @param sum - сумма снятия
      */
-    void addBankAtm(BankAtm atm);
-
-    /**
-     *
-     * @param id - id банкомата
-     * @return банкомат с данным id или null
-     */
-    BankAtm getBankAtmById(Long id);
-
-    /**
-     * удаляет банкомат по id
-     * @param id - id банкомата
-     */
-    void delBankAtmById(Long id);
+    void withdrawMoney(BankAtm atm, double sum);
 }

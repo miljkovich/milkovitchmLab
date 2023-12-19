@@ -3,7 +3,6 @@ package tech.reliab.course.milkovitchm.bank.service;
 import tech.reliab.course.milkovitchm.bank.entity.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface CreditAccountService {
     /**
@@ -29,29 +28,4 @@ public interface CreditAccountService {
                          Employee employee,
                          PaymentAccount paymentAccount
     );
-
-    /**
-     *
-     * @return список всех кредитных аккаунтов
-     */
-    List<CreditAccount> findAll();
-
-    /**
-     * добавляет кредитный аккаун в коллекцию
-     * @param creditAccount - кредитный аккаун
-     */
-    void addCreditAccount(CreditAccount creditAccount);
-
-    /**
-     *
-     * @param id - id кредитного аккаунта
-     * @return кредитный аккаун с данным id или null
-     */
-    CreditAccount getCreditAccountById(Long id);
-
-    /**
-     * удаляет кредитный аккаун по id
-     * @param id - id кредитного аккаунта
-     */
-    void delCreditAccountById(Long id);
 }

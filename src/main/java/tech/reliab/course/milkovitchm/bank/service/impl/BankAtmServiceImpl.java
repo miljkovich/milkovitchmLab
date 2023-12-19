@@ -5,10 +5,9 @@ import tech.reliab.course.milkovitchm.bank.entity.BankAtm;
 import tech.reliab.course.milkovitchm.bank.entity.BankOffice;
 import tech.reliab.course.milkovitchm.bank.entity.Employee;
 import tech.reliab.course.milkovitchm.bank.enums.AtmStatus;
+import tech.reliab.course.milkovitchm.bank.exceptions.NegativeSumException;
+import tech.reliab.course.milkovitchm.bank.exceptions.NotEnoughMoneyException;
 import tech.reliab.course.milkovitchm.bank.service.BankAtmService;
-
-import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  *  Singleton
@@ -26,7 +25,6 @@ public class BankAtmServiceImpl implements BankAtmService {
     }
 
     private Long id = 0L;
-    private LinkedHashMap<Long, BankAtm> atms = new LinkedHashMap<Long, BankAtm>();
 
 
     @Override
@@ -44,29 +42,20 @@ public class BankAtmServiceImpl implements BankAtmService {
                 bank.getMoneyAmount(),
                 maintenance
         );
-        bank.setNumberOfAtms(bank.getNumberOfAtms()+1);
-        bankOffice.setAtmNumber(bankOffice.getAtmNumber()+1);
+        bank.getAtms().add(bankAtm);
+        bankOffice.getAtms().add(bankAtm);
         return bankAtm;
     }
 
     @Override
-    public List<BankAtm> findAll(){
-        return atms.values().stream().toList();
-    }
-
-    @Override
-    public void addBankAtm(BankAtm atm){
-        atms.put(atm.getId(), atm);
-    }
-
-    @Override
-    public BankAtm getBankAtmById(Long id){
-        return atms.get(id);
-    }
-
-    @Override
-    public void delBankAtmById(Long id){
-        atms.remove(id);
+    public void withdrawMoney(BankAtm atm, double sum){
+        if(atm.getMoneyAmount()<sum){
+            throw new NotEnoughMoneyException();
+        }
+        if(sum < 0){
+            throw new NegativeSumException();
+        }
+        atm.setMoneyAmount(atm.getMoneyAmount()-sum);
     }
 
 

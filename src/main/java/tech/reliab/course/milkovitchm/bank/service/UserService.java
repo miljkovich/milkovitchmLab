@@ -4,7 +4,6 @@ import tech.reliab.course.milkovitchm.bank.entity.Bank;
 import tech.reliab.course.milkovitchm.bank.entity.User;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface UserService {
     /**
@@ -13,10 +12,9 @@ public interface UserService {
      * @param lastName - фамилия
      * @param birthDate - дата рождения клиента
      * @param job - место работы
-     * @param bank - банк
      * @return - возвращает созданный объект клиент
      */
-    User create(String firstName, String lastName, LocalDate birthDate, String job, Bank bank);
+    User create(String firstName, String lastName, LocalDate birthDate, String job);
     /**
      *
      * @param firstName - имя
@@ -24,39 +22,30 @@ public interface UserService {
      * @param patronymic - отчество
      * @param birthDate - дата рождения клиента
      * @param job - место работы
-     * @param bank - банк
      * @return - возвращает созданный объект клиент
      */
-    User create(String firstName, String lastName, String patronymic, LocalDate birthDate, String job, Bank bank);
-
-    /**
-     *
-     * @return список пользователей
-     */
-    List<User> findAll();
-
-    /**
-     * добавляет пользователя в коллекцию
-     * @param user - пользователь
-     */
-    void addUser(User user);
-
-    /**
-     *
-     * @param id - id пользователя
-     * @return пользователя с данным id
-     */
-    User getUserById(Long id);
-
-    /**
-     * удаляет пользователя с данным id
-     * @param id - id пользователя
-     */
-    void delUserById(Long id);
+    User create(String firstName, String lastName, String patronymic, LocalDate birthDate, String job);
 
     /**
      * выводит на экран информацию о пользователе
-     * @param id - id пользователя
+     * @param user - id пользователя
      */
-    void outputUserInfo(Long id);
+    void outputUserInfo(User user);
+
+    /**
+     * Добавляет банк в список банков, которыми пользуется клиент
+     * @param user - клиент
+     * @param bank - банк
+     */
+    void addBank(User user, Bank bank);
+
+    /**
+     * Удаляет банк из списка банков, которыми пользуется клиент
+     * @param user - клиент
+     * @param bank - банк
+     */
+    void deleteBank(User user, Bank bank);
+
+
+
 }

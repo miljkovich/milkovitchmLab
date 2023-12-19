@@ -1,6 +1,7 @@
 package tech.reliab.course.milkovitchm.bank.service;
 
 import tech.reliab.course.milkovitchm.bank.entity.Bank;
+import tech.reliab.course.milkovitchm.bank.entity.BankAtm;
 import tech.reliab.course.milkovitchm.bank.entity.BankOffice;
 
 import java.util.List;
@@ -17,27 +18,24 @@ public interface BankOfficeService {
     BankOffice create(String name, Bank bank, String address, double rent);
 
     /**
-     *
-     * @return список всех офисов
-     */
-    List<BankOffice> findAll();
-
-    /**
-     * добавляет офис в коллекцию
+     * Добавляем банкомат в офис
      * @param office - офис
+     * @param atm - банкомат
      */
-    void addOffice(BankOffice office);
+    void addAtm(BankOffice office, BankAtm atm);
+
+    /**
+     * Удаляем банкомат в офиса
+     * @param office - офис
+     * @param atm - банкомат
+     */
+    void deleteAtm(BankOffice office, BankAtm atm);
 
     /**
      *
-     * @param id - id офиса
-     * @return офис с данным id или null
+     * @param office - офис
+     * @param sum - сумма кредита
+     * @return - возвращает список банкоматов, которые могут выдать данную сумму
      */
-    BankOffice getOfficeById(Long id);
-
-    /**
-     * удаляет офис по id
-     * @param id - id офиса
-     */
-    void delOfficeById(Long id);
+    List<BankAtm> getAtmsForLoans(BankOffice office, double sum);
 }
