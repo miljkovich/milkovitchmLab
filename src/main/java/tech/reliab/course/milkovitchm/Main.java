@@ -1,10 +1,10 @@
 package tech.reliab.course.milkovitchm;
 
 import tech.reliab.course.milkovitchm.bank.entity.Bank;
-import tech.reliab.course.milkovitchm.bank.entity.User;
 import tech.reliab.course.milkovitchm.bank.service.*;
 import tech.reliab.course.milkovitchm.bank.service.impl.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,11 +82,14 @@ public class Main {
             bankList.add(bank);
         }
 
-        User user = userService.create("Test", "User", LocalDate.now(), "job");
 
-        bankService.getCredit(bankList, user);
-
-        userService.outputUserInfo(user);
+        try{
+            bankService.exportBankAccounts(bankList.get(0), "./test.txt");
+            bankService.importBankAccounts(bankList.get(1), "./test.txt");
+        }catch (IOException e){
+            System.out.println(e);
+        }
+    bankService.outputBankInfo(bankList.get(1));
 
     }
 }
